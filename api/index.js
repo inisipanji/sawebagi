@@ -42,13 +42,13 @@ function normalizeData(data, platform) {
   switch (platform) {
     case 'saweria':
       return {
-        donator: data.donator_name.toLowerCase().trim(),
+        donator: data.donator_name.trim(),  // Jangan lowercase, biar Roblox yang handle
         amount: data.amount_raw,
         message: data.message || ''
       };
     case 'bagibagi':
       return {
-        donator: data.name.toLowerCase().trim(),
+        donator: data.name.trim(),  // Jangan lowercase, biar Roblox yang handle
         amount: data.amount,
         message: data.message || ''
       };
