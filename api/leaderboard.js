@@ -7,17 +7,17 @@ const redis = new Redis({
 });
 
 export default async function handler(req, res) {
-  // Ambil Top 50 Data (High to Low)
-  // Format Upstash biasanya mengembalikan array of objects atau array datar
-  // Kita pakai try-catch biar aman
+  // Ambil SEMUA data donator (High to Low)
+  // Pakai 0, -1 supaya semua member di sorted set ikut keluar
+  // Jadi player yang pernah donate tapi di luar top 50 tetap muncul di leaderstats
   try {
-    const data = await redis.zrange('saweria_leaderboard', 0, 49, {
+    const data = await redis.zrange('saweria_leaderboard', 0, -1, {
       rev: true,
       withScores: true
     });
     
-    // Data dari Redis biasanya: [{member: "Budi", score: 50000}, ...]
-    // Atau Flat: ["Budi", 50000, "Siti", 20000] tergantung versi.
+    // Data dari Redis: flat array ["Budi", 50000, "Siti", 20000, ...]
+    // atau object array [{member: "Budi", score: 50000}, ...]
     // Kita kirim mentahnya ke Roblox, biar Roblox yang olah.
     return res.status(200).json(data);
   } catch (error) {
